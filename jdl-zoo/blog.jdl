@@ -1,0 +1,32 @@
+NAME_MIN_LENGTH = 3
+
+enum Language { ENGLISH, FRANCAIS }
+
+entity Blog {
+  /** The name */
+    name String required minlength(NAME_MIN_LENGTH) pattern(/[-_ a-zA-Z0-9]*/),
+    handle String required minlength(2)
+}
+
+entity Entry {
+    title String required,
+    language Language,
+    draft Boolean required,
+    content TextBlob required, // maxbytes(50000),
+    createdAt ZonedDateTime required,
+    photo ImageBlob maxbytes(1000000)
+}
+
+relationship ManyToOne {
+    Blog{user(login)} to User,
+    Entry{blog(name)} to Blog
+}
+
+paginate Blog with pagination
+paginate Entry with infinite-scroll
+
+dto * with mapstruct
+service all with serviceImpl
+angularSuffix * with myblog
+//search * with elasticsearch
+
